@@ -1,48 +1,65 @@
 package com.gionni.ethernit.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import java.util.*
+import com.gionni.ethernit.data.AttackUiState
+
+
 
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
-    list : LinkedList<String>
+    viewModel: AttackViewModel,
+    myUiState: AttackUiState
 ){
-    LazyColumn(
-       modifier = modifier
+
+
+    val uiState by viewModel.uiState.collectAsState()
+
+
+    Column(
+        modifier = modifier
+
 
     ){
-       items(list){inter ->
+       myUiState.interfaces.forEach{inter ->
            Row(
+
                verticalAlignment = Alignment.CenterVertically //TODO Modifier.selectable
            ){
-               Text(inter)}
+
+               Text(inter)
+           }
+
        }
 
 
     }
+    Box(
+        contentAlignment = Alignment.BottomEnd,
+        modifier = Modifier.fillMaxSize()
+
+    ) {
+        Button(onClick = {
+            viewModel.stopScan()
+            viewModel.setList(LinkedList())
+            viewModel.startScan()
+        }) {
+            Text("Scan")
+        }
+    }
 }
 
-@Preview
-@Composable
-fun SelectOptionPreview(){
-    val previewList = LinkedList<String>()
-    previewList.add("first")
-    previewList.add("second")
-    previewList.add("third")
-    ListScreen(
-        list = previewList
-    )
-}
+
+
+
+
+

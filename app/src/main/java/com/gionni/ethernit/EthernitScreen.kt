@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,9 +20,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.gionni.ethernit.data.AttackUiState
 import com.gionni.ethernit.ui.AttackScreen
 import com.gionni.ethernit.ui.AttackViewModel
 import com.gionni.ethernit.ui.ListScreen
+import kotlinx.coroutines.flow.StateFlow
 
 enum class EthernitScreen() {
     List,
@@ -64,7 +67,6 @@ fun EthernitAppBar(
 @Composable
 fun EthernitApp(
     modifier: Modifier = Modifier,
-    viewModel: AttackViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     // Get current back stack entry
@@ -73,6 +75,8 @@ fun EthernitApp(
     val currentScreen = EthernitScreen.valueOf(
         backStackEntry?.destination?.route ?: EthernitScreen.List.name
     )
+    var viewModel: AttackViewModel = viewModel()
+    var uiState = viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -84,7 +88,6 @@ fun EthernitApp(
             )
         }
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
 
         NavHost(
             navController = navController,
@@ -92,7 +95,7 @@ fun EthernitApp(
             modifier = modifier.padding(innerPadding)
         ) {
             composable(route = EthernitScreen.List.name) {
-                ListScreen(list = uiState.interfaces)
+                ListScreen(viewModel = viewModel, myUiState = uiState.value)
             }
             composable(route = EthernitScreen.Attack.name) {
                 val context = LocalContext.current
