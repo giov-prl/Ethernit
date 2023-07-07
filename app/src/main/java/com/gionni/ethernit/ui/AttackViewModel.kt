@@ -56,9 +56,10 @@ class AttackViewModel : ViewModel() {
 
                     if(!uiState.value.interfaces.contains(deviceHardwareAddress)) {
                         _uiState.update { currentState ->
-                            if (deviceHardwareAddress != null) {
+                            if (deviceHardwareAddress != null && deviceName != null) {
 
                                 list.addAll(currentState.interfaces)
+                                list.add(deviceName)
                                 list.add(deviceHardwareAddress)
 
 
