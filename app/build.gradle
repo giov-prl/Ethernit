@@ -50,10 +50,11 @@ android {
         }
     }
     externalNativeBuild {
-        cmake {
-            path file('../../libpcap/CMakeLists.txt')
-            version '3.22.1'
-        }
+
+    cmake {
+        path file('../libpcap/CMakeLists.txt')
+        version '3.22.1'
+    }
     }
 }
 
